@@ -5,7 +5,10 @@
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Prerequisites
+### Structure
+- aerial_pedestrain_detection: Has training scripts 
+- tracking: has scripts for tracking 
+- preprocessing: has scripts that converts data into the required format (path,x1,y1,x2,y2,label)
 
 
 ### Installing
