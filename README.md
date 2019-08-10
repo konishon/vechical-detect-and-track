@@ -6,20 +6,21 @@
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Structure
-- aerial_pedestrain_detection: Has training scripts 
-- tracking: has scripts for tracking 
-- preprocessing: has scripts that converts data into the required format (path,x1,y1,x2,y2,label)
+- **aerial_pedestrain_detection**: Has training scripts 
+- **tracking**: Has scripts for tracking 
+- **preprocessing**: Has scripts that converts data into the required format (path,x1,y1,x2,y2,label)
 
 
 ### Installing
-- `mkdir detect-and-track`
-- `git clone https://github.com/nishontan/vechical-detect-and-track`
+- `git clone git@github.com:nishontan/vechical-detect-and-track.git`
 - `conda create --name detect-and-track tensorflow-gpu`
 - `conda activate detect-and-track`
+- `cd vechical-detect-and-track`
 - `pip install aerial_pedestrian_detection/`
 
+
 ## Verifying Installation
-Run `aerial_pedestrian_detection/keras_retinanet/bin/train.py -h`
+Run `python aerial_pedestrian_detection/keras_retinanet/bin/train.py -h`
 It should show
 ```
 Using TensorFlow backend.
@@ -85,11 +86,15 @@ optional arguments:
 ```
 
 
-
 > Debugging Issues
 `ImportError: aerial_pedestrian_detection/keras_retinanet/bin/../../keras_retinanet/utils/compute_overlap.so: undefined symbol: _Py_ZeroStruct`
-- Remove `compute_overlap.so`
+- Remove `compute_overlap.so` and generate again
 	- `rm -rf aerial_pedestrian_detection/keras_retinanet/utils/compute_overlap.so`
+	- `cd aerial_pedestrian_detection`
+	- `python setup.py build_ext --inplace`
+	- `python setup.py build_ext install`
+`ModuleNotFoundError: No module named 'keras_retinanet.utils.compute_overlap'`
+- Generate compute_overlap
 	- `cd aerial_pedestrian_detection`
 	- `python setup.py build_ext --inplace`
 	
