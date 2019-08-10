@@ -1,3 +1,7 @@
+## Usage
+##  python tracking/app.py -v video/DJI_0002.MOV -s 10
+
+
 import argparse
 from collections import deque
 import cv2
@@ -12,8 +16,8 @@ from mathhelper import get_iou, get_bb_from_centroid, bb_intersection_over_union
 from retinahelper import load_model, get_good_features_to_track, labels_to_names
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", type=str, help="path to input video file")
-ap.add_argument("-s", "--skip_frames", type=int,
+ap.add_argument("-v", "--video",required=True, type=str, help="path to input video file")
+ap.add_argument("-s", "--skip_frames",required=True, type=int,
                 help="runs object dectector every specified n frames")
 args = vars(ap.parse_args())
 stream = cv2.VideoCapture(args['video'])

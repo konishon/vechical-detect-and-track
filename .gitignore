@@ -133,5 +133,6 @@ dmypy.json
 *.hdf5
 .DS_Store
 */datasets
+*/*.MOV
 
 __pycache__
