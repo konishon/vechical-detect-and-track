@@ -88,6 +88,7 @@ optional arguments:
 
 ## Debugging Installation Issues
 - `ImportError: aerial_pedestrian_detection/keras_retinanet/bin/../../keras_retinanet/utils/compute_overlap.so: undefined symbol: _Py_ZeroStruct`
+- **Run these commands**
 	- `cd aerial_pedestrian_detection`
 	- `python setup.py build_ext --inplace`
 	
