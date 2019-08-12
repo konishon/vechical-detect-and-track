@@ -89,10 +89,8 @@ optional arguments:
 > Debugging Issues
 `ImportError: aerial_pedestrian_detection/keras_retinanet/bin/../../keras_retinanet/utils/compute_overlap.so: undefined symbol: _Py_ZeroStruct`
 - Remove `compute_overlap.so` and generate again
-	- `rm -rf aerial_pedestrian_detection/keras_retinanet/utils/compute_overlap.so`
 	- `cd aerial_pedestrian_detection`
 	- `python setup.py build_ext --inplace`
-	- `python setup.py build_ext install`
 `ModuleNotFoundError: No module named 'keras_retinanet.utils.compute_overlap'`
 - Generate compute_overlap
 	- `cd aerial_pedestrian_detection`
