@@ -15,8 +15,8 @@ These instructions will get you a copy of the project up and running on your loc
 - `git clone git@github.com:nishontan/vechical-detect-and-track.git`
 - `conda create --name detect-and-track tensorflow-gpu`
 - `conda activate detect-and-track`
-- `cd vechical-detect-and-track`
-- `pip install aerial_pedestrian_detection/`
+- `cd vechical-detect-and-track/aerial_pedestrian_detection/`
+- `pip install .`
 
 
 ## Verifying Installation
@@ -87,12 +87,7 @@ optional arguments:
 
 
 > Debugging Issues
-`ImportError: aerial_pedestrian_detection/keras_retinanet/bin/../../keras_retinanet/utils/compute_overlap.so: undefined symbol: _Py_ZeroStruct`
-- Remove `compute_overlap.so` and generate again
-	- `cd aerial_pedestrian_detection`
-	- `python setup.py build_ext --inplace`
-`ModuleNotFoundError: No module named 'keras_retinanet.utils.compute_overlap'`
-- Generate compute_overlap
+- `ImportError: aerial_pedestrian_detection/keras_retinanet/bin/../../keras_retinanet/utils/compute_overlap.so: undefined symbol: _Py_ZeroStruct`
 	- `cd aerial_pedestrian_detection`
 	- `python setup.py build_ext --inplace`
 	
