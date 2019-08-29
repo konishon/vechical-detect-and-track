@@ -1,5 +1,8 @@
 # Detect & Track
+## Overview
+From traffic video footages from the roundabout obtained through UAV. We determine the direction where the ehicles moving. To count the vehicles, it must be tracked across a line. This means the object must be tracked prior to crossing the line. Lines must be placed in such a way that allows the object to cross.
 
+Also, a unique ID to each tracked object is necessary for counting objects and to monitor their performance. Intersection Over Union (IOU) – which is a metric to find the degree of overlap between two shapes was used. Using IOU we calculated the overlap ratio between an object’s bounding with all the other existing bounding boxes. If the IOU greater than 95% we assumed that it was the same object. Making us possible to assign a unique id to detected objects across multiple numbers of frames.
 
 ## Getting Started
 
