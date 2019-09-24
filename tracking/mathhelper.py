@@ -1,3 +1,6 @@
+from itertools import islice
+
+import numpy as np
 from shapely.geometry import Polygon
 
 
@@ -127,3 +130,9 @@ def bb_intersection_over_union2(boxA, boxB):
 
     # return the intersection over union value
     return iou
+
+
+
+def chunk(it, size):
+    it = iter(it)
+    return np.array(list(iter(lambda: list(islice(it, size)), [])),dtype=np.float32)

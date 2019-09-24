@@ -126,7 +126,9 @@ while 1:
     good_new = p1
     good_old = p0
 
-
+    print(good_old)
+    print(type(good_old))
+    print(good_old.shape)
 
 
     if current_frame_number % skip_frames == 0:

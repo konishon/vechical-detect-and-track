@@ -41,6 +41,7 @@ class retinaNet:
 
     def forward(self, image):
 
+
         image = preprocess_image(image)
         image, scale = resize_image(image)
 

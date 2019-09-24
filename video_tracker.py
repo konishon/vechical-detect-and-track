@@ -74,8 +74,8 @@ def predict_on_video(net, tracker_wrapper):
 
         print(len(tracker.tracks))
         for track in tracker.tracks:
-            # if not track.is_confirmed() or track.time_since_update > 1:
-            #     continue
+            if not track.is_confirmed() or track.time_since_update > 1:
+                continue
             bbox = track.to_tlbr()
             cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (255, 255, 255), 2)
             cv2.putText(image, str(track.track_id), (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, (0, 255, 0), 2)
