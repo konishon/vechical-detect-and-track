@@ -24,6 +24,7 @@ show_preview = False
 
 # optic flow
 old_gray = None
+good_old = None
 
 
 def capture_args():
@@ -50,40 +51,48 @@ def image_fprop(net, image):
 
 
 def predict_on_video(net):
-    global current_frame_number, old_gray
+    global current_frame_number, old_gray, good_old
     all_centroids = []
     while True:
         ret, frame = stream.read()
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if len(all_centroids) > 0:
-            good_old = chunk(all_centroids, 2)
+            # good_old = chunk(all_centroids, 2)
             good_new, st, err = cv2.calcOpticalFlowPyrLK(
                 old_gray, frame_gray, good_old, None, **lk_params)
-
             match_old_to_new_point(frame, good_new, good_old)
+            good_old = good_new
+
+        if current_frame_number % 100 == 0:
+            print(current_frame_number)
 
         if current_frame_number % skip_frames == 0:
             detections = image_fprop(net, frame)
             num_detections = int(len(all_centroids))
             print("[Info] found {0} objects at frame {1}".format(num_detections, current_frame_number))
             if len(all_centroids) > 0:
-                all_centroids = np.concatenate((all_centroids, append_to_tracker(detections)), axis=0)
+                print(good_old.shape)
+                print(append_to_tracker(detections))
+                good_old = np.concatenate((good_old, chunk(append_to_tracker(detections),2)), axis=0)
             else:
                 all_centroids = append_to_tracker(detections)
+                good_old = chunk(all_centroids, 2)
 
         if show_preview:
-            resized = imutils.resize(frame, width=300)
+            resized = imutils.resize(frame, width=1000)
             cv2.imshow('frame', resized)
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
         old_gray = frame_gray.copy()
+
         # increment frame count
         current_frame_number = current_frame_number + 1
 
 
 def append_to_tracker(detections):
+    global trackable_objects
     found_objects_centroids = []
     for i, detection in enumerate(detections):
         object_id = i + len(trackable_objects)

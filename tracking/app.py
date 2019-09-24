@@ -230,7 +230,7 @@ while 1:
     img = cv2.add(frame, mask)
     out.write(img)
     resized = imutils.resize(img, width=1000)
-    # cv2.imshow('frame', resized)
+    cv2.imshow('frame', resized)
     k = cv2.waitKey(30) & 0xff
     if k == 27:
         break
