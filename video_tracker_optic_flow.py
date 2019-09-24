@@ -51,13 +51,13 @@ def image_fprop(net, image):
 
 def predict_on_video(net):
     global current_frame_number, old_gray
-    found_objects_centroids = []
+    all_centroids = []
     while True:
         ret, frame = stream.read()
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        if len(found_objects_centroids) > 0:
-            good_old = chunk(found_objects_centroids, 2)
+        if len(all_centroids) > 0:
+            good_old = chunk(all_centroids, 2)
             good_new, st, err = cv2.calcOpticalFlowPyrLK(
                 old_gray, frame_gray, good_old, None, **lk_params)
 
@@ -65,9 +65,12 @@ def predict_on_video(net):
 
         if current_frame_number % skip_frames == 0:
             detections = image_fprop(net, frame)
-            num_detections = int(len(detections))
+            num_detections = int(len(all_centroids))
             print("[Info] found {0} objects at frame {1}".format(num_detections, current_frame_number))
-            found_objects_centroids = append_to_tracker(detections)
+            if len(all_centroids) > 0:
+                all_centroids = np.concatenate((all_centroids, append_to_tracker(detections)), axis=0)
+            else:
+                all_centroids = append_to_tracker(detections)
 
         if show_preview:
             resized = imutils.resize(frame, width=300)
@@ -157,7 +160,7 @@ def match_old_to_new_point(frame, good_new, good_old):
 
                 if key_to_update is not None:
                     x, y = new_point.ravel()
-                    print("Found for {0}".format(new_point.ravel()))
+                    # print("Found for {0}".format(new_point.ravel()))
                     point_to_update = (x, y)
                     found_obj = trackable_objects[key_to_update]
                     found_obj.centroids = point_to_update
