@@ -132,5 +132,10 @@ dmypy.json
 .DS_Store
 */datasets
 */*.MOV
+*/*.AVI
+
+/.idea
+
+
 
 __pycache__
