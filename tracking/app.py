@@ -16,8 +16,8 @@ from mathhelper import get_iou, get_bb_from_centroid, bb_intersection_over_union
 from retinahelper import load_model, get_good_features_to_track, labels_to_names
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video",required=True, type=str, help="path to input video file")
-ap.add_argument("-s", "--skip_frames",required=True, type=int,
+ap.add_argument("-v", "--video", required=True, type=str, help="path to input video file")
+ap.add_argument("-s", "--skip_frames", required=True, type=int,
                 help="runs object dectector every specified n frames")
 args = vars(ap.parse_args())
 stream = cv2.VideoCapture(args['video'])
@@ -45,13 +45,13 @@ for i, (box, score, label) in enumerate(zip(boxes[0], scores[0], labels[0])):
     centerX = (box[0] + box[2]) / 2
     centerY = (box[1] + box[3]) / 2
     point = np.array([[centerX, centerY]], dtype=np.float32)
+
     p0 = np.concatenate((point, p0))
 
     objectID = i
     to = TrackableObject(objectID, (centerX, centerY),
                          deque(), labels_to_names[label])
     trackableObjects[objectID] = to
-
 
     if removeBadValue:
         p0 = np.delete(p0, (1), axis=0)
@@ -125,11 +125,13 @@ while 1:
         old_gray, frame_gray, p0, None, **lk_params)
     good_new = p1
     good_old = p0
- 
+
+
+
 
     if current_frame_number % skip_frames == 0:
         print("Detecting Objects on {0}".format(current_frame_number))
-        print("Found {0} with confidence {1}".format(labels_to_names[label],score))    
+        print("Found {0} with confidence {1}".format(labels_to_names[label], score))
         boxes, scores, labels, = get_good_features_to_track(old_frame, model)
         for i, (box, score, label) in enumerate(zip(boxes[0], scores[0], labels[0])):
             # if score < 0.2:
@@ -141,15 +143,13 @@ while 1:
             b = box.astype(int)
             centerX = (box[0] + box[2]) / 2
             centerY = (box[1] + box[3]) / 2
-            point = np.array([[centerX, centerY]], dtype=np.float32)            
-            p0 = np.append(p0,point)
+            point = np.array([[centerX, centerY]], dtype=np.float32)
+            p0 = np.append(p0, point)
 
-    
             objectID = i + len(trackableObjects)
             to = TrackableObject(objectID, (centerX, centerY),
-                                deque(), labels_to_names[label])
+                                 deque(), labels_to_names[label])
             trackableObjects[objectID] = to
-             
 
     for i, new_point in enumerate(good_new):
         a, b = new_point.ravel()
@@ -205,7 +205,7 @@ while 1:
                 key_to_update = None
                 for key, value in trackableObjects.items():
                     cur_old_point = (old_point.ravel()[
-                                     0], old_point.ravel()[1])
+                                         0], old_point.ravel()[1])
                     if cur_old_point == value.centroids:
                         key_to_update = key
 
@@ -228,7 +228,7 @@ while 1:
     img = cv2.add(frame, mask)
     out.write(img)
     resized = imutils.resize(img, width=1000)
-    cv2.imshow('frame', resized)
+    # cv2.imshow('frame', resized)
     k = cv2.waitKey(30) & 0xff
     if k == 27:
         break
