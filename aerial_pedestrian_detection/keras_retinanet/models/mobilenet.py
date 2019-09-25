@@ -89,7 +89,8 @@ def mobilenet_retinanet(num_classes, backbone='mobilenet224_1.0', inputs=None, m
     Returns
         RetinaNet model with a MobileNet backbone.
     """
-    alpha = float(backbone.split('_')[1])
+    print("backbone {}".format(backbone))
+    alpha = 1.0
 
     # choose default input
     if inputs is None:

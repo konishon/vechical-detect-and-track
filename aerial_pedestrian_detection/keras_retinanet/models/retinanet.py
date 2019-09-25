@@ -273,7 +273,9 @@ def retinanet(
     if submodels is None:
         submodels = default_submodels(num_classes, num_anchors)
 
+
     C3, C4, C5 = backbone_layers
+
 
     # compute pyramid features as per https://arxiv.org/abs/1708.02002
     features = create_pyramid_features(C3, C4, C5)
