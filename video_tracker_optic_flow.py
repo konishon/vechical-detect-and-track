@@ -53,6 +53,7 @@ def image_fprop(net, image):
 def predict_on_video(net):
     global current_frame_number, old_gray, good_old
     all_centroids = []
+
     while True:
         ret, frame = stream.read()
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -72,9 +73,10 @@ def predict_on_video(net):
             num_detections = int(len(all_centroids))
             print("[Info] found {0} objects at frame {1}".format(num_detections, current_frame_number))
             if len(all_centroids) > 0:
-                print(good_old.shape)
-                print(append_to_tracker(detections))
-                good_old = np.concatenate((good_old, chunk(append_to_tracker(detections),2)), axis=0)
+                pass
+            # print(good_old.shape)
+            # print(append_to_tracker(detections))
+            # good_old = np.concatenate((good_old, chunk(append_to_tracker(detections),2)), axis=0)
             else:
                 all_centroids = append_to_tracker(detections)
                 good_old = chunk(all_centroids, 2)
@@ -85,6 +87,7 @@ def predict_on_video(net):
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
+
         old_gray = frame_gray.copy()
 
         # increment frame count
@@ -191,7 +194,7 @@ def draw_text(frame, coords, text):
 
 
 if __name__ == '__main__':
-    model_path = os.path.join('snapshots', 'resnet50_csv_08_inference.h5')
+    model_path = os.path.join('snapshots', 'resnet50_csv_12_inference.h5')
     capture_args()
     retinaNet = retinaNet(model_path, 0.6)
     predict_on_video(retinaNet)

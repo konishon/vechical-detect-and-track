@@ -139,8 +139,8 @@ while 1:
             # if score < 0.2:
             #     continue
 
-            if label == 5:
-                continue
+            # if label == 5:
+            #     continue
 
             b = box.astype(int)
             centerX = (box[0] + box[2]) / 2

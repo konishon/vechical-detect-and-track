@@ -20,7 +20,7 @@ def load_model():
     keras.backend.tensorflow_backend.set_session(get_session())
 
     # load retinanet model
-    model_path = os.path.join('snapshots', 'resnet50_csv_08_inference.h5')
+    model_path = os.path.join('snapshots', 'resnet50_csv_12_inference.h5')
     model = models.load_model(model_path, backbone_name='resnet50')
     return model
 
