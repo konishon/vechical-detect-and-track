@@ -113,7 +113,7 @@ def attach_direction_tracker(x, y):
 
         x = abpoints[i][0][0]
         y = abpoints[i][0][1]
-        cv2.putText(frame, direction, (x, y), cv2.FONT_HERSHEY_SIMPLEX,
+        cv2.putText(frame, direction, (int(x+70), y), cv2.FONT_HERSHEY_SIMPLEX,
                     0.65, (0, 0, 255), 3)
 
 

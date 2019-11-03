@@ -14,7 +14,7 @@ def round_half_up(n, decimals=0):
 
 
 def map_to_ratio(row):
-    return get_aspect_ratio(row['w'], row['h']).as_integer_ratio()
+    return get_aspect_ratio(row['w'], row['h'])
 
 
 def load_as_df(files):
