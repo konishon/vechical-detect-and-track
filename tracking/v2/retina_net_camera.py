@@ -6,6 +6,8 @@ from tracking.retinahelper import load_model
 '''
 Takes model and video and outputs detections for each frame
 '''
+
+
 class RetinaNetCamera:
     def __init__(self, video_source, show_bb=True):
         self.cap = cv2.VideoCapture(video_source)
@@ -31,7 +33,7 @@ class RetinaNetCamera:
 
     @staticmethod
     def draw_bb(faces, img):
-        padding = 50
+        padding = 10
 
         for (x, y, w, h) in faces:
             x1 = x - padding
