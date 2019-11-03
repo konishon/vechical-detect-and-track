@@ -22,11 +22,13 @@ class RetinaNetCamera:
         self.current_frame = self.update_current_frame(frame_number)
         s, img = self.cap.read()
         bb = None
+        has_preds = 0
         if s:
             pass
         if frame_number % 100 == 0:
+            has_preds = 1
             img, bb = self.forward_pass(img)
-        return img, bb
+        return has_preds,img, bb
 
     def forward_pass(self, frame):
         frame = self.preprocess_image(frame)
