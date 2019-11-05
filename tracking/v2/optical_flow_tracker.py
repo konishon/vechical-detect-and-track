@@ -23,7 +23,6 @@ class OpticalFlowTracker:
 
     def update(self, rgb):
         new_gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-
         lk_params = dict(winSize=(15, 15),
                          maxLevel=4,
                          criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
@@ -33,4 +32,3 @@ class OpticalFlowTracker:
 
         self.old_gray = new_gray.copy()
         self.old_point = new_points.reshape(-1, 1, 2)
-        self.tracked_points.append(self.old_point)

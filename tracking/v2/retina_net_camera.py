@@ -1,4 +1,5 @@
 import cv2
+import imutils
 import numpy as np
 import keras
 from keras_retinanet import models
@@ -14,21 +15,28 @@ class RetinaNetCamera:
         self.cap = cv2.VideoCapture(video_source)
         self.model = self.load_model()
         self.show_bb = show_bb
+        self.current_frame = None
 
-    def update_current_frame(self,current_frame):
+    def release_camera(self):
+        self.cap.release()
+
+    def update_current_frame(self, current_frame):
         self.current_frame = current_frame
 
-    def get_frame(self,frame_number):
-        self.current_frame = self.update_current_frame(frame_number)
+    def get_frame(self, frame_number):
+        self.update_current_frame(frame_number)
         s, img = self.cap.read()
+        frame = imutils.resize(img, width=500)
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
         bb = None
         has_preds = 0
         if s:
             pass
-        if frame_number % 100 == 0:
+        if frame_number % 500 == 0:
             has_preds = 1
-            img, bb = self.forward_pass(img)
-        return has_preds,img, bb
+            img, bb = self.forward_pass(rgb)
+        return has_preds, rgb, bb
 
     def forward_pass(self, frame):
         frame = self.preprocess_image(frame)
@@ -41,7 +49,7 @@ class RetinaNetCamera:
 
         return frame, (boxes, scores, labels)
 
-    def preprocess_image(self,x, mode='caffe'):
+    def preprocess_image(self, x, mode='caffe'):
         """ Preprocess an image by subtracting the ImageNet mean.
 
         Args
@@ -70,13 +78,11 @@ class RetinaNetCamera:
 
         return x
 
-
-
-    def get_session(self):
+    @staticmethod
+    def get_session():
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
         return tf.Session(config=config)
-
 
     def load_model(self):
         # set the modified tf session as backend in keras
@@ -85,7 +91,9 @@ class RetinaNetCamera:
         # # load retinanet model
         # model_path = os.path.join('snapshots', 'resnet50_csv_12_inference.h5')
         # print(model_path)
-        model = models.load_model("/home/nishon/Projects/python/vechical-detect-and-track/snapshots/resnet50_csv_12_inference.h5", backbone_name='resnet50')
+        model = models.load_model(
+            "/home/nishon/Projects/python/vechical-detect-and-track/snapshots/resnet50_csv_12_inference.h5",
+            backbone_name='resnet50')
         return model
 
     @staticmethod
