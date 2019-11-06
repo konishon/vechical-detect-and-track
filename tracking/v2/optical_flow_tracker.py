@@ -12,16 +12,27 @@ class OpticalFlowTracker:
         self.y = None
         self.label = None
 
+    def chunker(self, seq, size):
+        res = []
+        for el in seq:
+            res.append(el)
+            if len(res) == size:
+                yield res
+                res = []
+        if res:
+            yield res
+
     def get_tracked_points(self):
         return self.tracked_points
 
-    def start_track(self, rgb, points,label):
-        self.old_point = np.array([[points[0], points[1]]], dtype=np.float32)
+    def start_track(self, rgb, points, label):
+        self.old_point = np.array(
+            [[points[0], points[1]], [points[2], points[3]]], dtype=np.float32)
         self.old_gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
         self.label = label
 
     def get_position(self):
-        return self.x, self.y
+        return self.new_points
 
     def update(self, rgb):
         new_gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
@@ -29,8 +40,9 @@ class OpticalFlowTracker:
                          maxLevel=4,
                          criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-        new_points, status, error = cv2.calcOpticalFlowPyrLK(self.old_gray, new_gray, self.old_point, None, **lk_params)
-        self.x, self.y = new_points.ravel()
+        new_points_all, status, error = cv2.calcOpticalFlowPyrLK(
+            self.old_gray, new_gray, self.old_point, None, **lk_params)
+        self.new_points = new_points_all.ravel()
 
         self.old_gray = new_gray.copy()
-        self.old_point = new_points.reshape(-1, 1, 2)
+        self.old_point = new_points_all.reshape(-1, 1, 2)

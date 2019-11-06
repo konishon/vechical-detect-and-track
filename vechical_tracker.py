@@ -26,33 +26,45 @@ def create_new_trackers(preds, frame, frame_number, trackers):
         tracker = OpticalFlowTracker()
         center_x = (box[0] + box[2]) / 2
         center_y = (box[1] + box[3]) / 2
+
+        first_offset_x = center_x - 10
+        first_offset_y = center_y - 10
+
         label = "{}_{}_{}".format(labels_to_names[label], frame_number, i)
 
-        tracker.start_track(frame, [center_x, center_y], label)
+        tracker.start_track(
+            frame, [center_x, center_y, first_offset_x, first_offset_y], label)
         trackers.append(tracker)
 
 
-def update_position(frame,trackers):
+def update_position(frame, trackers):
     # print("Tracking {} objects".format(len(trackers)))
     for tracker in trackers:
         tracker.update(frame)
-        (x, y) = tracker.get_position()
+        points = tracker.get_position()
+        
+        points = chunker(points, 2)
+        print(points)
+        for point in points:
+            print(point)
+            x = int(point[0])
+            y = int(point[1])
 
-        x = int(x)
-        y = int(y)
+            text = "ID {}".format(tracker.label)
+            # cv2.putText(frame, text, (x - 10, y - 10),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.circle(frame, (x, y), 1, (0, 255, 0), -1)
 
-        (start_x, start_y), (end_x, end_y) = get_bb_from_centroid(x, y, 20, 20)
 
-        # unpack the position object
-        start_x = int(start_x)
-        start_y = int(start_y)
-        end_x = int(end_x)
-        end_y = int(end_y)
-
-        text = "ID {}".format(tracker.label)
-        cv2.putText(frame, text, (x - 10, y - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        cv2.circle(frame, (x, y), 1, (0, 255, 0), -1)
+def chunker(seq, size):
+    res = []
+    for el in seq:
+        res.append(el)
+        if len(res) == size:
+            yield res
+            res = []
+    if res:
+        yield res
 
 
 def run(src):
@@ -68,7 +80,7 @@ def run(src):
         if has_preds:
             create_new_trackers(preds, frame, frame_number, trackers)
         else:
-            update_position(frame,trackers)
+            update_position(frame, trackers)
 
         frame = imutils.resize(frame, width=500)
         cv2.imshow("Frame", frame)
