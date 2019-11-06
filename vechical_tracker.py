@@ -3,7 +3,7 @@ import fire
 import imutils
 from tracking.mathhelper import get_bb_from_centroid
 from tracking.v2.optical_flow_tracker import OpticalFlowTracker
-from tracking.v2.py.centroidtracker import CentroidTracker
+from tracking.v2.iou_tracker import IOUTracker
 from tracking.v2.py.trackableobject import TrackableObject
 from tracking.v2.retina_net_camera import RetinaNetCamera
 
@@ -14,7 +14,7 @@ def run(src):
     frame_number = 0
     trackers = []
     points = []
-    ct = CentroidTracker(maxDisappeared=40, maxDistance=50)
+    ct = IOUTracker()
 
     retina_camera = RetinaNetCamera(src)
     while True:
@@ -29,10 +29,11 @@ def run(src):
                 tracker.start_track(frame, [center_x, center_y])
                 trackers.append(tracker)
         else:
-            print("Tracking {} objects".format(len(trackers)))
+            # print("Tracking {} objects".format(len(trackers)))
             for tracker in trackers:
                 tracker.update(frame)
                 (x, y) = tracker.get_position()
+
                 x = int(x)
                 y = int(y)
 
@@ -48,6 +49,7 @@ def run(src):
                 points.append((start_x, start_y, end_x, end_y))
 
         objects = ct.update(points)
+        # print("Updating {} objects".format(len(objects)))
         for (objectID, centroid) in objects.items():
             to = trackable_objects.get(objectID, None)
             if to is None:
@@ -58,13 +60,13 @@ def run(src):
             trackable_objects[objectID] = to
 
             text = "ID {}".format(objectID)
-            cv2.putText(frame, text, (centroid[0] - 10, centroid[1] - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            # cv2.putText(frame, text, (centroid[0] - 10, centroid[1] - 10),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0., (0, 255, 0), 2)
             cv2.circle(frame, (centroid[0], centroid[1]), 4, (0, 255, 0), -1)
 
         frame = imutils.resize(frame, width=500)
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(5) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
         if key == 27:
             retina_camera.release_camera()

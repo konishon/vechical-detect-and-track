@@ -117,8 +117,9 @@ class CentroidTracker:
 				# the maximum distance, do not associate the two
 				# centroids to the same object
 				if D[row, col] > self.maxDistance:
+					
 					continue
-
+				print("Associating {}".format(objectIDs[row]))
 				# otherwise, grab the object ID for the current row,
 				# set its new centroid, and reset the disappeared
 				# counter
