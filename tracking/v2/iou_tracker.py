@@ -22,22 +22,11 @@ class IOUTracker:
         del self.disappeared[object_id]
 
     def update(self, boxes):
-        # if len(self.objects) == 0:
-        #     for box in boxes:
-        #         (start_x, start_y, end_x, end_y) = box
-
-        #         c = (start_x + end_x) / 2
-        #         d = (end_x + end_y) / 2
-        #         self.register((c, d))
-        # else:
-        #     object_ids = list(self.objects.keys())
-        #     object_centroids = list(self.objects.values())
-
         for box in boxes:
             (start_x, start_y, end_x, end_y) = box
             center_x = (start_x + end_x) / 2
             center_y = (end_x + end_y) / 2
-            self.register((center_x, center_y))
+            self.register((int(center_x), int(center_y)))
 
         for index, box in enumerate(boxes):
             (start_x, start_y, end_x, end_y) = box
@@ -55,4 +44,5 @@ class IOUTracker:
                     key_to_update = list(self.objects.keys())[index]
                     self.objects[key_to_update] = (int(a), int(b))
 
+                
         return self.objects

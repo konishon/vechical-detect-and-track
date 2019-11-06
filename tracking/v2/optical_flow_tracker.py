@@ -10,13 +10,15 @@ class OpticalFlowTracker:
         self.old_gray = None
         self.x = None
         self.y = None
+        self.label = None
 
     def get_tracked_points(self):
         return self.tracked_points
 
-    def start_track(self, rgb, points):
+    def start_track(self, rgb, points,label):
         self.old_point = np.array([[points[0], points[1]]], dtype=np.float32)
         self.old_gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
+        self.label = label
 
     def get_position(self):
         return self.x, self.y

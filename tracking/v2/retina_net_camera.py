@@ -33,7 +33,7 @@ class RetinaNetCamera:
         has_preds = 0
         if s:
             pass
-        if frame_number % 500 == 0:
+        if frame_number % 100 == 0:
             has_preds = 1
             img, bb = self.forward_pass(rgb)
         return has_preds, rgb, bb
@@ -110,3 +110,4 @@ class RetinaNetCamera:
 
         #     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
         return img
+
