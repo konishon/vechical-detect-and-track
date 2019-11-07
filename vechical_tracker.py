@@ -1,10 +1,10 @@
 import cv2
 import fire
 import imutils
-from tracking.mathhelper import get_bb_from_centroid
+
 from tracking.v2.optical_flow_tracker import OpticalFlowTracker
-from tracking.v2.iou_tracker import IOUTracker
-from tracking.v2.py.trackableobject import TrackableObject
+
+
 from tracking.v2.retina_net_camera import RetinaNetCamera
 import numpy as np
 
@@ -84,11 +84,20 @@ def chunker(seq, size):
         yield res
 
 
+
 def run(src):
     frame_number = 0
     trackers = []
     points = []
-    ct = IOUTracker()
+
+    # # Default resolutions of the frame are obtained.The default resolutions are system dependent.
+    # # We convert the resolutions from float to integer.
+    frame_width = int(800)
+    frame_height = int(800)
+
+    # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+    out = cv2.VideoWriter('optical-flow.avi', cv2.VideoWriter_fourcc(
+        'M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
 
     retina_camera = RetinaNetCamera(src)
     while True:
