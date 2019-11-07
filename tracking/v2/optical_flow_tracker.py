@@ -17,8 +17,8 @@ class OpticalFlowTracker:
         (x1, y1, x2, y2) = bb
 
         crop_img = img[int(y1):int(y2), int(x1):int(x2)]
-        # image_name = "{0}.jpg".format(time.time())
-        # cv2.imwrite(image_name, crop_img)
+        image_name = "{0}.jpg".format(time.time())
+        cv2.imwrite(image_name, crop_img)
 
         return crop_img
 
@@ -29,14 +29,16 @@ class OpticalFlowTracker:
     '''
 
     def corners_to_track(self, gray_frame, bb):
-        feature_params = dict(maxCorners=100,
+        feature_params = dict(maxCorners=3,
                               qualityLevel=0.3,
-                              minDistance=7,
-                              blockSize=7)
+                              gradientSize = 3,
+                              minDistance=1,
+                              blockSize=3)
 
         cropped_img = self.crop_image(gray_frame, bb)
         (x1, y1, x2, y2) = bb
         scaled_corners = []
+        
         corners = cv2.goodFeaturesToTrack(
             cropped_img, mask=None, **feature_params)
         return corners    
@@ -91,7 +93,9 @@ class OpticalFlowTracker:
 
         new_points_all, status, error = cv2.calcOpticalFlowPyrLK(
             self.old_gray, new_gray, self.old_point, None, **lk_params)
-        self.new_points = new_points_all.ravel()
+        good_new = new_points_all 
+        
+        self.new_points = good_new.ravel()
 
         self.old_gray = new_gray.copy()
         self.old_point = new_points_all.reshape(-1, 1, 2)

@@ -11,11 +11,13 @@ Takes model and video and outputs detections for each frame
 
 
 class RetinaNetCamera:
-    def __init__(self, video_source, show_bb=True):
+    def __init__(self, video_source, show_bb=True, export_video=False):
         self.cap = cv2.VideoCapture(video_source)
         self.model = self.load_model()
         self.show_bb = show_bb
         self.current_frame = None
+        if export_video:
+            self.init_video_export()
 
     def release_camera(self):
         self.cap.release()
@@ -77,6 +79,17 @@ class RetinaNetCamera:
 
         return x
 
+    def init_video_export(self):
+        frame_width = int(self.cap.get(3))
+        frame_height = int(self.cap.get(4))
+
+        self.out = cv2.VideoWriter('optical-flow.avi', cv2.VideoWriter_fourcc(
+            'M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
+
+    def add_frame(self, frame):
+        if self.out is not None:
+            self.out.write(frame)
+
     @staticmethod
     def get_session():
         config = tf.ConfigProto()
@@ -94,6 +107,3 @@ class RetinaNetCamera:
             "/home/nishon/Projects/python/vechical-detect-and-track/snapshots/resnet50_csv_12_inference.h5",
             backbone_name='resnet50')
         return model
-
-
-

@@ -26,7 +26,6 @@ def create_new_trackers(preds, frame, frame_number, trackers):
             continue
         if label == 5:
             continue
-    
 
         tracker = OpticalFlowTracker()
         # label = "{}_{}_{}".format(labels_to_names[label], frame_number, i)
@@ -37,16 +36,18 @@ def create_new_trackers(preds, frame, frame_number, trackers):
         tracker.assign_color(color)
         trackers.append(tracker)
 
-def is_the_detection_new(box,trackers):
+
+def is_the_detection_new(box, trackers):
     is_cointained = []
     for tracker in trackers:
         points = tracker.get_position()
 
 
-        
-def rectContains(rect,pt):
-    logic = rect[0] < pt[0] < rect[0]+rect[2] and rect[1] < pt[1] < rect[1]+rect[3]
+def rectContains(rect, pt):
+    logic = rect[0] < pt[0] < rect[0] + \
+        rect[2] and rect[1] < pt[1] < rect[1]+rect[3]
     return logic
+
 
 def get_random_color():
     color1 = (list(np.random.choice(range(256), size=3)))
@@ -84,22 +85,13 @@ def chunker(seq, size):
         yield res
 
 
-
-def run(src):
+def run(src,export_video=False):
     frame_number = 0
     trackers = []
     points = []
 
-    # # Default resolutions of the frame are obtained.The default resolutions are system dependent.
-    # # We convert the resolutions from float to integer.
-    frame_width = int(800)
-    frame_height = int(800)
-
-    # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out = cv2.VideoWriter('optical-flow.avi', cv2.VideoWriter_fourcc(
-        'M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
-
-    retina_camera = RetinaNetCamera(src)
+   
+    retina_camera = RetinaNetCamera(src, export_video=export_video)
     while True:
         has_preds, frame, preds = retina_camera.get_frame(frame_number)
 
@@ -109,7 +101,11 @@ def run(src):
             update_position(frame, trackers)
 
         frame = imutils.resize(frame, width=800)
-        cv2.imshow("Frame", frame)
+
+        if not export_video:
+            cv2.imshow("Frame", frame)
+        else:
+            retina_camera.add_frame(frame)
         key = cv2.waitKey(1) & 0xFF
 
         if key == 27:
