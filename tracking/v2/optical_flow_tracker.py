@@ -39,22 +39,13 @@ class OpticalFlowTracker:
         scaled_corners = []
         corners = cv2.goodFeaturesToTrack(
             cropped_img, mask=None, **feature_params)
-        if corners is None:
-            center_x = (x1 + x2) / 2
-            center_y = (y1 + y2) / 2
-            scaled_corners.append([center_x, center_y])
-        else:
-            # cv2.imshow("crop_{}".format(bb), cropped_img)
-
-            for point in corners:
-                x = point[0][0] + x1
-                y = point[0][1] + y1
-            scaled_corners.append([x, y])
-
-        return scaled_corners
+        return corners    
 
     def get_tracked_points(self):
         return self.tracked_points
+
+    def assign_color(self,color):
+        self.color = color
 
     '''
     Takes a RGB frame, bounding boxes and labels 
@@ -70,11 +61,12 @@ class OpticalFlowTracker:
         self.old_point = np.array([[0, 0]], dtype=np.float32)
 
         corners = self.corners_to_track(self.old_gray, bb)
-
+        
         if corners is not None:
+            (x1, y1, x2, y2) = bb
             for point in corners:
-
-                x, y = point[0], point[1]
+               
+                x, y = point[0][1] + x1, point[0][1] + y1
                 point_to_concat = np.array([[x, y]], dtype=np.float32)
                 self.old_point = np.concatenate(
                     [self.old_point, point_to_concat])

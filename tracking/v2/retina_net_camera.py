@@ -26,7 +26,7 @@ class RetinaNetCamera:
     def get_frame(self, frame_number):
         self.update_current_frame(frame_number)
         s, img = self.cap.read()
-        frame = imutils.resize(img, width=500)
+        frame = imutils.resize(img, width=800)
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         bb = None
