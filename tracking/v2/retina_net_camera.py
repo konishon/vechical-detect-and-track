@@ -45,7 +45,6 @@ class RetinaNetCamera:
 
         if self.show_bb:
             pass
-            self.draw_bb(boxes, frame)
 
         return frame, (boxes, scores, labels)
 
@@ -96,17 +95,5 @@ class RetinaNetCamera:
             backbone_name='resnet50')
         return model
 
-    @staticmethod
-    def draw_bb(faces, img):
-        padding = 10
-        for box in faces:
-            break
-        # for (x, y, w, h) in faces:
-        #     x1 = x - padding
-        #     y1 = y - padding
-        #     x2 = x + w + padding
-        #     y2 = y + h + padding
 
-        #     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-        return img
 
