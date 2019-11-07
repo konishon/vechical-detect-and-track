@@ -45,7 +45,7 @@ class RetinaNetCamera:
 
         if self.show_bb:
             pass
-            # self.draw_bb(boxes, frame)
+            self.draw_bb(boxes, frame)
 
         return frame, (boxes, scores, labels)
 
@@ -100,7 +100,6 @@ class RetinaNetCamera:
     def draw_bb(faces, img):
         padding = 10
         for box in faces:
-            print(box)
             break
         # for (x, y, w, h) in faces:
         #     x1 = x - padding

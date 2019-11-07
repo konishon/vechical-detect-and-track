@@ -43,6 +43,5 @@ class IOUTracker:
                 if overlap_ratio > self.iou_ratio:
                     key_to_update = list(self.objects.keys())[index]
                     self.objects[key_to_update] = (int(a), int(b))
-
                 
         return self.objects
